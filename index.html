@@ -101,7 +101,7 @@ async function blockUser(p){
  const ins=await db.from("user_blocks").insert({blocker_id:user.id,blocked_id:p.id});
  if(ins.error){status(ins.error.code==="23505"?"This user is already blocked.":"Couldn't block user: "+ins.error.message);return}
  const rel=await db.from("friendships").select("id,requester_id,addressee_id").or("requester_id.eq."+user.id+",addressee_id.eq."+user.id);
- if(!rel.error){for(const f of (rel.data||[]).filter(f=>(f.requester_id===user.id&&f.addressee_id===p.id)||(f.requester_id===p.id&&f.addressee_id===user.id)){const d=await db.from("friendships").delete().eq("id",f.id);if(d.error)status("User blocked, but a friendship entry could not be removed: "+d.error.message)}}
+ if(!rel.error){for(const f of (rel.data||[]).filter(f=>(f.requester_id===user.id&&f.addressee_id===p.id)||(f.requester_id===p.id&&f.addressee_id===user.id))){const d=await db.from("friendships").delete().eq("id",f.id);if(d.error)status("User blocked, but a friendship entry could not be removed: "+d.error.message)}}
  if(activeDM&&activeDM.id===p.id){activeDM=null;$("dmTitle").textContent="Conversation blocked";$("dmSubtitle").textContent="Unblock this user to start a new conversation."; $("dmMessages").replaceChildren(Object.assign(document.createElement("div"),{className:"empty",textContent:"Private conversation unavailable while blocked."}));$("dmMessage").disabled=true;$("dmSend").disabled=true}
  status("@"+p.username+" has been blocked.");await loadFriends();await loadBlocked();if(activeView==="dm")await loadDMFriends();
 }
