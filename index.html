@@ -77,7 +77,7 @@ function addDMMessage(m){
  const name=document.createElement("b");name.textContent=m.sender_id===user.id?"You":(activeDM.display_name||activeDM.username);
  const body=document.createElement("div");body.textContent=m.content||"";
  const time=document.createElement("div");time.className="muted";time.style.marginTop="6px";time.textContent=new Date(m.created_at||Date.now()).toLocaleString([], {month:"short",day:"numeric",hour:"numeric",minute:"2-digit"});
- el.append(name,body,time);$("dmMessages").append(el);$("dmMessages").scrollTop=$("dmMessages").scrollHeight;
+ el.append(name,body,time);const empty=$("dmMessages").querySelector(".empty");if(empty)empty.remove();$("dmMessages").append(el);$("dmMessages").scrollTop=$("dmMessages").scrollHeight;
 }
 async function openDM(p){
  activeDM=p;$("dmTitle").textContent=p.display_name||p.username;$("dmSubtitle").textContent="@"+p.username+" · private chat";$("dmMessages").replaceChildren();$("dmMessage").disabled=false;$("dmSend").disabled=false;$("dmMessage").placeholder="Message "+(p.display_name||p.username)+"…";
